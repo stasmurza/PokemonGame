@@ -1,0 +1,34 @@
+version: '3.4'
+
+services:
+  apigatewaywebapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=8001
+      - Kestrel__Certificates__Default__Path=/https/aspnetcore.pfx
+      - Kestrel__Certificates__Default__Password=password    
+    ports:
+      - "8000:80"
+      - "8001:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ./devcert/aspnetcore.pfx:/https/aspnetcore.pfx:ro
+    depends_on:
+            - pokemonservicewebapi
+
+  pokemonservicewebapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_HTTPS_PORT=9001
+      - Kestrel__Certificates__Default__Path=/https/aspnetcore.pfx
+      - Kestrel__Certificates__Default__Password=password    
+    ports:
+      - "9000:80"
+      - "9001:443"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ./devcert/aspnetcore.pfx:/https/aspnetcore.pfx:ro

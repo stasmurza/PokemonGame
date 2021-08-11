@@ -1,0 +1,14 @@
+version: '3.4'
+
+services:
+  apigatewaywebapi:
+    image: ${DOCKER_REGISTRY-}apigatewaywebapi
+    build:
+      context: ./ApiGateway
+      dockerfile: ApiGateway.WebApi/Dockerfile
+
+  pokemonservicewebapi:
+    image: ${DOCKER_REGISTRY-}pokemonservicewebapi
+    build:
+      context: ./PokemonService
+      dockerfile: PokemonService.WebApi/Dockerfile
