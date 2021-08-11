@@ -71,15 +71,25 @@ In memory db would be replaced with relational or non-relational db for Pokemon 
 
 
 HOW TO RUN DOCKER CONTAINERS
+
 1 Check .netcoreapp5.0 platform is installed
+
 2 Check docker desktop is installed
+
 3 Open PowerShell in the PokemonGame directory and run next commands step by step:
+
 dotnet dev-certs https -ep .\devcert\aspnetcore.pfx -p password
+
 dotnet dev-certs https --trust
+
 docker compose build
+
 docker-compose up
+
 4 Open additional PowerShell instance and run next commands:
+
 Start-Process "https://localhost:8001/index.html"
+
 Start-Process "https://localhost:9001/index.html"
 
-Please note, if you would like to run under API under, you will need to specify URL for accessing Pokémon API in PokemonService\PokemonService.WebApi\appsettings.json, item PokemonApi
+Please note, if you would like to run APIs under IIS, you will need to specify URL for accessing Pokémon API in PokemonService\PokemonService.WebApi\appsettings.json, item PokemonApi
