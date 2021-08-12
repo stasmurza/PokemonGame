@@ -33,6 +33,9 @@ namespace PokemonService.DataAccess.Repositiories
         {
             if (pokemon is null) throw new ArgumentNullException(nameof(pokemon));
 
+            var exist = await _dbContext.Pokemons.AnyAsync(i => i.Name.Equals(pokemon.Name));
+            if (exist) throw new UniqueIndexViolationException($"Entity with name '{pokemon.Name}' is already exist");
+
             await _dbContext.Pokemons.AddAsync(pokemon);
             await _dbContext.SaveChangesAsync();
         }
@@ -42,7 +45,7 @@ namespace PokemonService.DataAccess.Repositiories
             if (pokemon is null) throw new ArgumentNullException(nameof(pokemon));
 
             var exist = await _dbContext.Pokemons.AnyAsync(i => i.Id == pokemon.Id);
-            if (!exist) throw new EntityNotFoundException($"Entity with id {pokemon.Id} has not found");
+            if (!exist) throw new EntityNotFoundException($"Entity with id '{pokemon.Id}' has not found");
 
             _dbContext.Attach(pokemon);
             _dbContext.Entry(pokemon).Property(p => p.Name).IsModified = true;

@@ -1,21 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using PokemonService.DataAccess.Exceptions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace PokemonService.WebApi.Filters
 {
     public class ExceptionFilter : IExceptionFilter
     {
         private readonly ILogger<ExceptionFilter> _logger;
+        private readonly IWebHostEnvironment _environment;
 
-        public ExceptionFilter(ILogger<ExceptionFilter> logger)
+        public ExceptionFilter(ILogger<ExceptionFilter> logger, IWebHostEnvironment env)
         {
             _logger = logger;
+            _environment = env;
         }
 
         public void OnException(ExceptionContext context)
@@ -24,6 +24,14 @@ namespace PokemonService.WebApi.Filters
             context.ExceptionHandled = true;
 
             if (context.Exception is EntityNotFoundException)
+            {
+                context.Result = new BadRequestObjectResult(context.Exception.Message);
+            }
+            else if (context.Exception is UniqueIndexViolationException)
+            {
+                context.Result = new BadRequestObjectResult(context.Exception.Message);
+            }
+            else if (_environment.IsDevelopment())
             {
                 context.Result = new BadRequestObjectResult(context.Exception.Message);
             }
