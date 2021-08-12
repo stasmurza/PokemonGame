@@ -1,6 +1,8 @@
 ﻿using ApiGateway.BusinessLayer.Exceptions;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace ApiGateway.WebApi.Filters
@@ -8,10 +10,12 @@ namespace ApiGateway.WebApi.Filters
     public class ExceptionFilter : IExceptionFilter
     {
         private readonly ILogger<ExceptionFilter> _logger;
+        private readonly IWebHostEnvironment _environment;
 
-        public ExceptionFilter(ILogger<ExceptionFilter> logger)
+        public ExceptionFilter(ILogger<ExceptionFilter> logger, IWebHostEnvironment env)
         {
             _logger = logger;
+            _environment = env;
         }
 
         public void OnException(ExceptionContext context)
@@ -23,9 +27,13 @@ namespace ApiGateway.WebApi.Filters
             {
                 context.Result = new BadRequestObjectResult(context.Exception.Message);
             }
-            else
+            else if (_environment.IsDevelopment())
             {
                 context.Result = new BadRequestObjectResult(context.Exception.Message);
+            }
+            else
+            {
+                context.Result = new BadRequestObjectResult("Internal server error");
             }
         }
     }
