@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
+using System;
 
-namespace ApiGateway.WebApi.UnitTests
+namespace ApiGateway.WebApi.UnitTests.Filters
 {
     [TestFixture]
     public class ActivityLoggerFilterTests
@@ -31,10 +32,10 @@ namespace ApiGateway.WebApi.UnitTests
             var logger = Substitute.For<ILogger<ActivityLoggerFilter>>();
             var executedContext = _fixture.Create<ActionExecutedContext>();
 
-            var sut = _fixture.Create<ActivityLoggerFilter>();
+            var sut = Substitute.For<ActivityLoggerFilter>(logger);
             sut.OnActionExecuted(executedContext);
 
-            logger.ReceivedWithAnyArgs(2);
+            logger.ReceivedWithAnyArgs().LogInformation(String.Empty);
         }
 
         [Test]
@@ -43,10 +44,10 @@ namespace ApiGateway.WebApi.UnitTests
             var logger = Substitute.For<ILogger<ActivityLoggerFilter>>();
             var executingContext = _fixture.Create<ActionExecutingContext>();
 
-            var sut = _fixture.Create<ActivityLoggerFilter>();
+            var sut = Substitute.For<ActivityLoggerFilter>(logger);
             sut.OnActionExecuting(executingContext);
 
-            logger.ReceivedWithAnyArgs(2);
+            logger.ReceivedWithAnyArgs().LogInformation(String.Empty);
         }
     }
 }
