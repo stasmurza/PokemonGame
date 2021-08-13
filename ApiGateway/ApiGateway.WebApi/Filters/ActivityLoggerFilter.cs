@@ -12,7 +12,7 @@ namespace ApiGateway.WebApi.Filters
             _logger = logger;
         }
 
-        void IActionFilter.OnActionExecuted(ActionExecutedContext context)
+        public void OnActionExecuted(ActionExecutedContext context)
         {
             var message = $"Action executed '{context.ActionDescriptor.DisplayName}'." +
                 $"TraceId {context.HttpContext.TraceIdentifier}.";
@@ -23,7 +23,7 @@ namespace ApiGateway.WebApi.Filters
             _logger.LogInformation(message);
         }
 
-        void IActionFilter.OnActionExecuting(ActionExecutingContext context)
+        public void OnActionExecuting(ActionExecutingContext context)
         {
             var message = $"Executing action '{context.ActionDescriptor.DisplayName}'." +
                 $"TraceId '{context.HttpContext.TraceIdentifier}'.";
